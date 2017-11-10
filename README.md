@@ -87,3 +87,64 @@ iterateAll([1,2,3]) { |n| puts n }
 Here the method takes in an array as the first argument, and then a block. To execute the block with a given parameter similar to how Proc.call works, we have the Ruby keyword "yield". It works very much like Proc.call by setting the blocks parameter to the given argument and executing the block. The "&" symbol is required in the parameter name to tell Ruby that the argument being passed in will be a block.
  
 Sorry for being so verbose and if this left you more confused than you started. Let me know if there are any questions. Thanks!
+
+# Additional example
+```Ruby
+
+class Array                          # Monkey patch the Array class
+  def my_each(&block)                # create a method called my_each that takes a block as an argument
+    i = 0                            # create a variable called "i" and assign it to the number 0
+    while(i < self.length)           # while the variable "i" is less than the the instance of the array's length...
+      yield(self[i], i)                    # execute the block passed in with the arguments: ith element of the instace of the array and the value of "i" variable (the index)
+      i += 1                         # increase the value of the variable "i" by one.
+    end
+  end
+
+  def my_map(&block)                 # create a method called my_map that takes a block as an argument
+    self.my_each do |n, idx|         # call the instance of the array's my_each method passing in the block that has the arguments "n" and "idx"
+      self[idx] = yield(n)           # execution of the my_each block will set the instance of the array's ith element to whatever the my_map block returns
+    end
+    return self                      # return the instance of the array
+  end
+end
+
+
+=begin 
+
+  print ([1,2,3].my_map {|n| n * n })
+
+  # I know this is ugly and not the right way to write code but this might explain what it happening
+
+  my_each is called with the block: {|n, idx| self[idx] = yield(n) }
+
+  for the first element the block "yielded" such that:
+
+  n = 1,
+  idx = 0 
+
+  so self[0] = {|1| 1 * 1 } <--- this block comes from the yield call within the my_map method.
+     self[0] = 1
+
+  second element...
+
+  n = 2
+  idx = 1 
+
+  so self[1] = {|2| 2 * 2 }
+     self[1] = 4 
+
+
+  third element...
+
+  n = 3
+  idx = 2 
+
+  so self[2] = {|3| 3 * 3 }
+     self[2] = 9 
+
+  in the end we return self.
+
+  => [1, 4, 9]
+
+=end
+```
