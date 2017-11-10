@@ -4,13 +4,13 @@ My explanation of procs and blocks
 Here is my understanding and hope it guides you in the right direction.
 Let's say you want to create your own ".each" method so let's see how a normal ".each" method works first.
 
-```
+```Ruby
 [1, 2, 3].each {|n| puts n }
 ```
 
 Executing the code above will output the following
 
-```
+```Ruby
 1
 2
 3
@@ -19,7 +19,7 @@ Executing the code above will output the following
 
 Now I assume you know how to write this and what it will produce. Let's go over how to create this method ourselves. A naive approach might be the following.
 
-```
+```Ruby
 def putsAll(arr)
   i = 0
   while(i < arr.length)
@@ -34,7 +34,7 @@ putsAll([1,2,3])
 
 Yay, now we have a method that "puts" all the elements from our array. But wait... something is wrong. What if we want to sum up all the numbers instead? This is a problem that procs can help solve. We need to rewrite our function so that it takes some kind of process. Here our process is to print out all our numbers (for sake of brevity I'm gonna use puts and print interchangeably.. Let's write a "Proc" that does just that. 
 
-```
+```Ruby
 myPrintingProcess = Proc.new {|n| puts n }
 ```
 
@@ -42,7 +42,7 @@ Here we are creating a new Proc object and assigning it to the variable myPrinti
 
 Now that we have a Proc, let's create a new method that will iterate through an array's elements and execute whatever code that the proc passed in tells it to. (in this case... to print!)
 
-```
+```Ruby
 def iterateAll(arr, someProc)
   i = 0
   while(i < arr.length) 
@@ -63,7 +63,7 @@ The Ruby docs defines the .call method as such
 
 Let me redefine that to "sets 'n' to whatever you passed in as the argument. So in the above example, we are setting the "n" to the first element of the array and then executing the proc. The following execution of my method should result in the same output.
 
-```
+```Ruby
 iterateAll([1,2,3], myPrintingProcess)
 ```
 
@@ -71,7 +71,7 @@ So what is the difference between a block and a proc you say? A block is a set o
  
 "A Ruby block is a way of grouping statements, and may appear only in the source adjacent to a method call"
 
-```
+```Ruby
 def iterateAll(arr, &someBlock)
   i = 0
   while(i < arr.length) 
